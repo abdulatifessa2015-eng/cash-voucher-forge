@@ -120,9 +120,15 @@ export function VoucherDocument({
           <div className="voucher-address">
             <div>الأحساء - الهفوف - المزروعية</div>
             <div>قرب جامع المزروعية الكبير</div>
-            <div>هاتف : 03 5871544</div>
-            <div>ناسخ : 03 5847014</div>
-            <div>ص . ب : 2248 _ الأحساء : 31982</div>
+            <div>
+              هاتف : <span dir="ltr">03 5871544</span>
+            </div>
+            <div>
+              ناسخ : <span dir="ltr">03 5847014</span>
+            </div>
+            <div>
+              ص . ب : <span dir="ltr">2248</span> _ الأحساء : <span dir="ltr">31982</span>
+            </div>
             <div>البريد الإلكتروني</div>
             <div>mazroaiyah@ahsaber.org</div>
           </div>
