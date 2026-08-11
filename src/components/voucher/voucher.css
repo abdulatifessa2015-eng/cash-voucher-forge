@@ -29,6 +29,7 @@
 .voucher-main {
   position: relative;
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   padding: 7mm 6mm 7mm 4mm;
@@ -203,6 +204,7 @@
 
 .voucher-side {
   width: 50mm;
+  flex: 0 0 50mm;
   background: linear-gradient(180deg, var(--v-olive) 0%, var(--v-sand) 22%, var(--v-sand) 100%);
   color: #fff;
   display: flex;
