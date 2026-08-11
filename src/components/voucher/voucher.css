@@ -1,0 +1,283 @@
+/* أنماط سند الصرف النقدي — المقاس المعتمد 200mm × 119mm */
+
+.voucher-sheet {
+  --v-red: #b04a3c;
+  --v-dark: #4a4a38;
+  --v-mint: #cfe3d4;
+  --v-cream: #f3ecda;
+  --v-olive: #6f7a4a;
+  --v-sand: #8b7b45;
+  --v-ink: #2c2c22;
+  position: relative;
+  width: 200mm;
+  height: 119mm;
+  display: flex;
+  background: var(--v-cream);
+  font-family: "Cairo", system-ui, sans-serif;
+  color: var(--v-ink);
+  overflow: hidden;
+}
+
+.voucher-frame {
+  position: absolute;
+  inset: 0;
+  border-top: 5mm solid var(--v-olive);
+  border-bottom: 5mm solid var(--v-olive);
+  pointer-events: none;
+}
+
+.voucher-main {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 7mm 6mm 7mm 4mm;
+}
+
+.voucher-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: var(--v-mint);
+  padding: 1mm 2mm 2mm;
+}
+.voucher-head-right {
+  text-align: center;
+}
+.voucher-org {
+  background: var(--v-dark);
+  color: var(--v-cream);
+  font-weight: 700;
+  font-size: 5mm;
+  padding: 0.6mm 3mm;
+}
+.voucher-reg {
+  font-size: 2.4mm;
+  margin-top: 0.8mm;
+}
+.voucher-title {
+  color: var(--v-red);
+  font-weight: 700;
+  font-size: 9mm;
+  line-height: 1.1;
+  margin-inline-end: 14mm;
+}
+
+.voucher-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3mm;
+  padding-top: 3mm;
+}
+
+.voucher-row {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+}
+.voucher-cell {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  flex: 1;
+}
+
+.voucher-label-plain {
+  font-weight: 700;
+  font-size: 3.6mm;
+  letter-spacing: 0.5mm;
+  white-space: nowrap;
+}
+
+.voucher-tag {
+  background: var(--v-red);
+  color: #fff;
+  font-weight: 700;
+  font-size: 3.4mm;
+  border-radius: 2mm;
+  padding: 1.6mm 2.5mm;
+  white-space: nowrap;
+}
+
+.voucher-box {
+  background: #fff;
+  border-radius: 2mm;
+  min-height: 8mm;
+  display: flex;
+  align-items: center;
+  padding: 0 2mm;
+  font-size: 3.6mm;
+}
+.voucher-box--grow {
+  flex: 1;
+}
+.voucher-box--ticks {
+  flex: 1;
+  background-image: repeating-linear-gradient(
+    to left,
+    transparent 0 7mm,
+    #999 7mm 7.2mm
+  );
+  background-position: bottom;
+  background-size: 100% 2mm;
+  background-repeat: repeat-x;
+  justify-content: center;
+  font-weight: 700;
+}
+.voucher-box--words {
+  width: 42mm;
+}
+.voucher-box--accounts {
+  flex: 1;
+  gap: 2mm;
+  font-size: 3.2mm;
+}
+.voucher-date {
+  width: 48mm;
+  gap: 2mm;
+  justify-content: center;
+  font-weight: 700;
+}
+.voucher-slash,
+.voucher-hijri {
+  color: var(--v-ink);
+}
+
+.voucher-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 1mm;
+  white-space: nowrap;
+}
+.voucher-square {
+  display: inline-block;
+  width: 2.6mm;
+  height: 2.6mm;
+  border: 0.3mm solid var(--v-ink);
+  line-height: 2.4mm;
+  text-align: center;
+  font-size: 2.4mm;
+}
+.voucher-other {
+  flex: 1;
+  border-bottom: 0.2mm dotted var(--v-ink);
+  min-width: 18mm;
+}
+
+.voucher-signs {
+  display: flex;
+  gap: 4mm;
+  margin-top: auto;
+}
+.voucher-sign {
+  flex: 1;
+}
+.voucher-sign-title {
+  font-weight: 700;
+  font-size: 3.6mm;
+  margin-bottom: 3mm;
+}
+.voucher-sign-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 1mm;
+  font-size: 2.8mm;
+  margin-top: 3mm;
+}
+.voucher-sign-value {
+  flex: 1;
+  border-bottom: 0.2mm solid var(--v-ink);
+  min-height: 4mm;
+  font-size: 3.2mm;
+}
+
+.voucher-code {
+  position: absolute;
+  inset-inline-start: 1mm;
+  bottom: 26mm;
+  writing-mode: vertical-rl;
+  font-size: 2.6mm;
+  letter-spacing: 0.4mm;
+}
+
+.voucher-side {
+  width: 50mm;
+  background: linear-gradient(180deg, var(--v-olive) 0%, var(--v-sand) 22%, var(--v-sand) 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4mm 3mm 6mm;
+  text-align: center;
+}
+.voucher-side--blank {
+  background: none;
+  color: inherit;
+  justify-content: flex-start;
+}
+.voucher-logo {
+  width: 26mm;
+  height: 20mm;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--v-olive);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6mm;
+  font-weight: 700;
+}
+.voucher-center {
+  font-weight: 700;
+  font-size: 5mm;
+  margin-top: 4mm;
+}
+.voucher-serial {
+  margin-top: 3mm;
+  background: #fff;
+  color: var(--v-red);
+  font-weight: 700;
+  font-size: 6mm;
+  border-radius: 2mm;
+  padding: 0.5mm 6mm;
+}
+.voucher-serial--blank {
+  background: none;
+  margin-top: 32mm;
+}
+.voucher-address {
+  margin-top: auto;
+  font-size: 2.6mm;
+  line-height: 1.7;
+}
+.voucher-web {
+  margin-top: 3mm;
+  background: var(--v-red);
+  border-radius: 3mm;
+  padding: 1mm 5mm;
+  font-size: 3mm;
+  font-weight: 700;
+}
+
+@media print {
+  @page {
+    size: 200mm 119mm;
+    margin: 0;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .voucher-print-area,
+  .voucher-print-area * {
+    visibility: visible;
+  }
+  .voucher-print-area {
+    position: absolute;
+    inset: 0;
+  }
+  .voucher-sheet {
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
