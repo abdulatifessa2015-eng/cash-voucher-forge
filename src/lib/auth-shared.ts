@@ -43,4 +43,6 @@ export const ACTION_LABEL: Record<string, string> = {
   user_role_changed: "تعديل صلاحية",
   user_status_changed: "تغيير حالة مستخدم",
   system_bootstrap: "تهيئة النظام",
+  voucher_created: "إنشاء سند",
+  voucher_updated: "تعديل سند",
 };
