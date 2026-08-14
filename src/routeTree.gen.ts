@@ -19,6 +19,7 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedUsersRouteImport } from './routes/_authenticated/users'
 import { Route as AuthenticatedVoucherAnalysisRouteImport } from './routes/_authenticated/voucher-analysis'
 import { Route as AuthenticatedVouchersIndexRouteImport } from './routes/_authenticated/vouchers.index'
+import { Route as AuthenticatedVouchersIdRouteImport } from './routes/_authenticated/vouchers.$id'
 import { Route as AuthenticatedVouchersNewRouteImport } from './routes/_authenticated/vouchers.new'
 
 const IndexRoute = IndexRouteImport.update({
@@ -72,6 +73,11 @@ const AuthenticatedVouchersIndexRoute =
     path: '/vouchers/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedVouchersIdRoute = AuthenticatedVouchersIdRouteImport.update({
+  id: '/vouchers/$id',
+  path: '/vouchers/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedVouchersNewRoute =
   AuthenticatedVouchersNewRouteImport.update({
     id: '/vouchers/new',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/users': typeof AuthenticatedUsersRoute
   '/voucher-analysis': typeof AuthenticatedVoucherAnalysisRoute
+  '/vouchers/$id': typeof AuthenticatedVouchersIdRoute
   '/vouchers/new': typeof AuthenticatedVouchersNewRoute
   '/vouchers/': typeof AuthenticatedVouchersIndexRoute
 }
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/users': typeof AuthenticatedUsersRoute
   '/voucher-analysis': typeof AuthenticatedVoucherAnalysisRoute
+  '/vouchers/$id': typeof AuthenticatedVouchersIdRoute
   '/vouchers/new': typeof AuthenticatedVouchersNewRoute
   '/vouchers': typeof AuthenticatedVouchersIndexRoute
 }
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/users': typeof AuthenticatedUsersRoute
   '/_authenticated/voucher-analysis': typeof AuthenticatedVoucherAnalysisRoute
+  '/_authenticated/vouchers/$id': typeof AuthenticatedVouchersIdRoute
   '/_authenticated/vouchers/new': typeof AuthenticatedVouchersNewRoute
   '/_authenticated/vouchers/': typeof AuthenticatedVouchersIndexRoute
 }
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/users'
     | '/voucher-analysis'
+    | '/vouchers/$id'
     | '/vouchers/new'
     | '/vouchers/'
   fileRoutesByTo: FileRoutesByTo
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/users'
     | '/voucher-analysis'
+    | '/vouchers/$id'
     | '/vouchers/new'
     | '/vouchers'
   id:
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/users'
     | '/_authenticated/voucher-analysis'
+    | '/_authenticated/vouchers/$id'
     | '/_authenticated/vouchers/new'
     | '/_authenticated/vouchers/'
   fileRoutesById: FileRoutesById
@@ -235,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVouchersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/vouchers/$id': {
+      id: '/_authenticated/vouchers/$id'
+      path: '/vouchers/$id'
+      fullPath: '/vouchers/$id'
+      preLoaderRoute: typeof AuthenticatedVouchersIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/vouchers/new': {
       id: '/_authenticated/vouchers/new'
       path: '/vouchers/new'
@@ -252,6 +271,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedUsersRoute: typeof AuthenticatedUsersRoute
   AuthenticatedVoucherAnalysisRoute: typeof AuthenticatedVoucherAnalysisRoute
+  AuthenticatedVouchersIdRoute: typeof AuthenticatedVouchersIdRoute
   AuthenticatedVouchersNewRoute: typeof AuthenticatedVouchersNewRoute
   AuthenticatedVouchersIndexRoute: typeof AuthenticatedVouchersIndexRoute
 }
@@ -263,6 +283,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedUsersRoute: AuthenticatedUsersRoute,
   AuthenticatedVoucherAnalysisRoute: AuthenticatedVoucherAnalysisRoute,
+  AuthenticatedVouchersIdRoute: AuthenticatedVouchersIdRoute,
   AuthenticatedVouchersNewRoute: AuthenticatedVouchersNewRoute,
   AuthenticatedVouchersIndexRoute: AuthenticatedVouchersIndexRoute,
 }
