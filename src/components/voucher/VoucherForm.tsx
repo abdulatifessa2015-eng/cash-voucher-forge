@@ -34,7 +34,7 @@ export function VoucherForm({
   submitLabel: string;
   busy: boolean;
   onSubmit: (data: VoucherData) => Promise<void>;
-  serialSuggestion?: string;
+  serialSuggestion?: string | undefined;
 }) {
   const [v, setV] = useState<VoucherData>(initial);
   const [serialTouched, setSerialTouched] = useState(false);
