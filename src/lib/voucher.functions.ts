@@ -65,25 +65,27 @@ function toAmount(v: string): number | null {
 }
 
 function mapRow(r: Record<string, unknown>): VoucherRow {
+  const s = (k: string) => (r[k] as string | null) ?? "";
   return {
-    id: r.id as string,
-    serial: r.serial as string,
-    amountFigures: r.amount_figures === null || r.amount_figures === undefined ? null : Number(r.amount_figures),
-    amountWords: (r.amount_words as string) ?? "",
-    dateDay: (r.date_day as string) ?? "",
-    dateMonth: (r.date_month as string) ?? "",
-    dateYear: (r.date_year as string) ?? "",
-    receiverName: (r.receiver_name as string) ?? "",
-    account: ((r.account_kind as string) ?? "none") as AccountKind,
-    accountOther: (r.account_other as string) ?? "",
-    reason: (r.reason as string) ?? "",
-    signReceiver: (r.sign_receiver as string) ?? "",
-    signAccountant: (r.sign_accountant as string) ?? "",
-    signManager: (r.sign_manager as string) ?? "",
-    status: (r.status as string) ?? "draft",
-    createdBy: r.created_by as string,
-    createdAt: r.created_at as string,
-    updatedAt: r.updated_at as string,
+    id: r['id'] as string,
+    serial: r['serial'] as string,
+    amountFigures:
+      r['amount_figures'] === null || r['amount_figures'] === undefined ? null : Number(r['amount_figures']),
+    amountWords: s('amount_words'),
+    dateDay: s('date_day'),
+    dateMonth: s('date_month'),
+    dateYear: s('date_year'),
+    receiverName: s('receiver_name'),
+    account: (s('account_kind') || 'none') as AccountKind,
+    accountOther: s('account_other'),
+    reason: s('reason'),
+    signReceiver: s('sign_receiver'),
+    signAccountant: s('sign_accountant'),
+    signManager: s('sign_manager'),
+    status: s('status') || 'draft',
+    createdBy: r['created_by'] as string,
+    createdAt: r['created_at'] as string,
+    updatedAt: r['updated_at'] as string,
   };
 }
 
