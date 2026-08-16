@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Printer } from "lucide-react";
 import { VoucherDocument } from "./VoucherDocument";
 import type { VoucherData, AccountKind } from "./voucher-types";
 import "./voucher.css";
@@ -34,10 +34,11 @@ export function VoucherForm({
   submitLabel: string;
   busy: boolean;
   onSubmit: (data: VoucherData) => Promise<void>;
-  serialSuggestion?: string;
+  serialSuggestion?: string | undefined;
 }) {
   const [v, setV] = useState<VoucherData>(initial);
   const [serialTouched, setSerialTouched] = useState(false);
+  const [printMode, setPrintMode] = useState<"full" | "values">("full");
   const set = (patch: Partial<VoucherData>) => setV((p) => ({ ...p, ...patch }));
 
   useEffect(() => {
@@ -198,16 +199,39 @@ export function VoucherForm({
       </div>
 
       <div className="space-y-2">
-        <p className="text-sm font-semibold text-muted-foreground">معاينة مباشرة (200 × 119 مم)</p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm font-semibold text-muted-foreground">معاينة مباشرة (200 × 119 مم)</p>
+          <div className="flex items-center gap-2">
+            <select
+              className="h-9 rounded-md border border-input bg-background px-2 text-sm"
+              value={printMode}
+              onChange={(e) => setPrintMode(e.target.value as "full" | "values")}
+            >
+              <option value="full">طباعة كاملة (ورق أبيض)</option>
+              <option value="values">البيانات فقط (ورق مطبوع مسبقًا)</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90"
+            >
+              <Printer className="size-4" />
+              طباعة
+            </button>
+          </div>
+        </div>
         <div
           className="overflow-auto rounded-lg border border-border bg-[#f3ecda] p-4"
           style={{ maxHeight: 560 }}
         >
           <div className="voucher-print-area">
-            <VoucherDocument data={v} mode="full" />
+            <VoucherDocument data={v} mode={printMode} />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">المعاينة فقط — الطباعة غير مفعّلة في هذه المرحلة.</p>
+        <p className="text-xs text-muted-foreground">
+          مقاس الورق 200×119 مم — اضبط الطابعة على «الحجم الفعلي» بدون هوامش. المعايرة النهائية لطابعة Samsung
+          ML-2160 في مرحلة لاحقة.
+        </p>
       </div>
     </form>
   );
