@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { Loader2, Printer } from "lucide-react";
 import { VoucherDocument } from "./VoucherDocument";
+import { VoucherOverlay } from "./VoucherOverlay";
+import {
+  DEFAULT_CALIBRATION,
+  loadCalibration,
+  saveCalibration,
+  type Calibration,
+} from "./voucher-layout";
 import type { VoucherData, AccountKind } from "./voucher-types";
 import "./voucher.css";
 
@@ -39,7 +47,22 @@ export function VoucherForm({
   const [v, setV] = useState<VoucherData>(initial);
   const [serialTouched, setSerialTouched] = useState(false);
   const [printMode, setPrintMode] = useState<"full" | "values">("full");
+  const [calibration, setCalibration] = useState<Calibration>(DEFAULT_CALIBRATION);
+  const [mounted, setMounted] = useState(false);
   const set = (patch: Partial<VoucherData>) => setV((p) => ({ ...p, ...patch }));
+
+  useEffect(() => {
+    setMounted(true);
+    setCalibration(loadCalibration());
+  }, []);
+
+  const updateCalibration = (patch: Partial<Calibration>) => {
+    setCalibration((prev) => {
+      const next = { ...prev, ...patch };
+      saveCalibration(next);
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (serialSuggestion && !serialTouched) set({ serial: serialSuggestion });
@@ -224,14 +247,66 @@ export function VoucherForm({
           className="overflow-auto rounded-lg border border-border bg-[#f3ecda] p-4"
           style={{ maxHeight: 560 }}
         >
-          <div className="voucher-print-area">
-            <VoucherDocument data={v} mode={printMode} />
-          </div>
+          {printMode === "full" ? (
+            <VoucherDocument data={v} mode="full" />
+          ) : (
+            <VoucherOverlay data={v} calibration={calibration} guides />
+          )}
         </div>
+
+        {printMode === "values" && (
+          <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-card p-3">
+            <p className="w-full text-xs font-semibold text-muted-foreground">
+              معايرة الطباعة (إزاحة بالمليمتر) — تُحفظ على هذا الجهاز
+            </p>
+            <label className="text-xs">
+              إزاحة أفقية
+              <input
+                type="number"
+                step="0.5"
+                dir="ltr"
+                className="mt-1 h-9 w-24 rounded-md border border-input bg-background px-2"
+                value={calibration.offsetX}
+                onChange={(e) => updateCalibration({ offsetX: Number(e.target.value) || 0 })}
+              />
+            </label>
+            <label className="text-xs">
+              إزاحة رأسية
+              <input
+                type="number"
+                step="0.5"
+                dir="ltr"
+                className="mt-1 h-9 w-24 rounded-md border border-input bg-background px-2"
+                value={calibration.offsetY}
+                onChange={(e) => updateCalibration({ offsetY: Number(e.target.value) || 0 })}
+              />
+            </label>
+            <button
+              type="button"
+              className="h-9 rounded-md border border-input px-3 text-xs"
+              onClick={() => updateCalibration(DEFAULT_CALIBRATION)}
+            >
+              تصفير
+            </button>
+          </div>
+        )}
+
         <p className="text-xs text-muted-foreground">
-          مقاس الورق 200×119 مم — اضبط الطابعة على «الحجم الفعلي» بدون هوامش. المعايرة النهائية لطابعة Samsung
-          ML-2160 في مرحلة لاحقة.
+          مقاس الورق 200×119 مم. في نافذة الطباعة: اختر حجم ورق مخصص 200×119 مم، المقياس 100% (الحجم
+          الفعلي)، الهوامش «بدون»، وأزل خيار «ملاءمة الصفحة».
         </p>
+
+        {mounted &&
+          createPortal(
+            <div className="voucher-print-root">
+              {printMode === "full" ? (
+                <VoucherDocument data={v} mode="full" />
+              ) : (
+                <VoucherOverlay data={v} calibration={calibration} />
+              )}
+            </div>,
+            document.body,
+          )}
       </div>
     </form>
   );
