@@ -262,24 +262,94 @@
   font-weight: 700;
 }
 
+/* ===== طبقة البيانات فوق النموذج المطبوع مسبقًا ===== */
+.voucher-overlay {
+  position: relative;
+  background: #fff;
+  font-family: "Cairo", system-ui, sans-serif;
+  color: #000;
+  overflow: hidden;
+}
+.voucher-overlay-layer {
+  position: absolute;
+  inset: 0;
+}
+.voucher-overlay-field {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.voucher-overlay-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
+}
+.voucher-overlay-mark {
+  position: absolute;
+  font-size: 3mm;
+  line-height: 1;
+  font-weight: 700;
+}
+.voucher-overlay--guides .voucher-overlay-field {
+  outline: 0.2mm dashed #9aa;
+}
+.voucher-overlay--guides {
+  outline: 0.3mm solid #ccc;
+}
+
+/* ===== محرك الطباعة: 200×119 مم، بدون هوامش وبدون تحجيم ===== */
+@page {
+  size: 200mm 119mm;
+  margin: 0;
+}
+
 @media print {
-  @page {
-    size: 200mm 119mm;
-    margin: 0;
+  html,
+  body {
+    width: 200mm;
+    height: 119mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
-  body * {
-    visibility: hidden;
+  /* إخفاء كل شيء عدا منطقة الطباعة (display:none يمنع بقاء مساحات فارغة) */
+  body > * {
+    display: none !important;
   }
-  .voucher-print-area,
-  .voucher-print-area * {
-    visibility: visible;
-  }
-  .voucher-print-area {
+  body > .voucher-print-root {
+    display: block !important;
     position: absolute;
     inset: 0;
+    width: 200mm;
+    height: 119mm;
+    overflow: hidden;
+    page-break-after: avoid;
+    page-break-inside: avoid;
   }
-  .voucher-sheet {
+  .voucher-print-root .voucher-sheet,
+  .voucher-print-root .voucher-overlay {
     box-shadow: none !important;
     transform: none !important;
+    zoom: 1 !important;
+    width: 200mm !important;
+    height: 119mm !important;
   }
+  .voucher-print-root .voucher-overlay {
+    background: transparent !important;
+  }
+  .voucher-print-root .voucher-overlay--guides,
+  .voucher-print-root .voucher-overlay--guides .voucher-overlay-field {
+    outline: none !important;
+  }
+}
+
+/* منطقة الطباعة لا تظهر على الشاشة */
+.voucher-print-root {
+  display: none;
 }
