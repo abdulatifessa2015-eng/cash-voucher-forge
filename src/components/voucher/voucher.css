@@ -300,6 +300,16 @@
 .voucher-overlay--guides {
   outline: 0.3mm solid #ccc;
 }
+.voucher-overlay-field--draggable {
+  cursor: move;
+  touch-action: none;
+  outline: 0.3mm dashed #3b6ea5 !important;
+  background: rgba(59, 110, 165, 0.08);
+  user-select: none;
+}
+.voucher-overlay-field--draggable:hover {
+  background: rgba(59, 110, 165, 0.18);
+}
 
 /* ===== محرك الطباعة: 200×119 مم، بدون هوامش وبدون تحجيم ===== */
 @page {

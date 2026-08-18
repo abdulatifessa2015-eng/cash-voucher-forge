@@ -8,7 +8,10 @@ import {
   DEFAULT_CALIBRATION,
   loadCalibration,
   saveCalibration,
+  loadFieldOffsets,
+  saveFieldOffsets,
   type Calibration,
+  type FieldOffsets,
 } from "./voucher-layout";
 import type { VoucherData, AccountKind } from "./voucher-types";
 import "./voucher.css";
@@ -48,12 +51,15 @@ export function VoucherForm({
   const [serialTouched, setSerialTouched] = useState(false);
   const [printMode, setPrintMode] = useState<"full" | "values">("full");
   const [calibration, setCalibration] = useState<Calibration>(DEFAULT_CALIBRATION);
+  const [fieldOffsets, setFieldOffsets] = useState<FieldOffsets>({});
+  const [calibrateMode, setCalibrateMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const set = (patch: Partial<VoucherData>) => setV((p) => ({ ...p, ...patch }));
 
   useEffect(() => {
     setMounted(true);
     setCalibration(loadCalibration());
+    setFieldOffsets(loadFieldOffsets());
   }, []);
 
   const updateCalibration = (patch: Partial<Calibration>) => {
@@ -62,6 +68,25 @@ export function VoucherForm({
       saveCalibration(next);
       return next;
     });
+  };
+
+  const moveField = (key: string, dx: number, dy: number) => {
+    setFieldOffsets((prev) => {
+      const next = { ...prev, [key]: { dx, dy } };
+      saveFieldOffsets(next);
+      return next;
+    });
+  };
+
+  const resetFieldOffsets = () => {
+    setFieldOffsets({});
+    saveFieldOffsets({});
+    toast.success("تمت إعادة الحقول إلى مواقعها الأصلية");
+  };
+
+  const testPrint = () => {
+    setPrintMode("values");
+    setTimeout(() => window.print(), 150);
   };
 
   useEffect(() => {
@@ -233,6 +258,24 @@ export function VoucherForm({
               <option value="full">طباعة كاملة (ورق أبيض)</option>
               <option value="values">البيانات فقط (ورق مطبوع مسبقًا)</option>
             </select>
+            {printMode === "values" && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setCalibrateMode((c) => !c)}
+                  className={`h-9 rounded-md border border-input px-3 text-sm font-semibold ${calibrateMode ? "bg-secondary text-secondary-foreground" : ""}`}
+                >
+                  {calibrateMode ? "إنهاء المعايرة" : "معايرة الطباعة"}
+                </button>
+                <button
+                  type="button"
+                  onClick={testPrint}
+                  className="h-9 rounded-md border border-input px-3 text-sm font-semibold"
+                >
+                  طباعة تجريبية
+                </button>
+              </>
+            )}
             <button
               type="button"
               onClick={() => window.print()}
@@ -250,9 +293,31 @@ export function VoucherForm({
           {printMode === "full" ? (
             <VoucherDocument data={v} mode="full" />
           ) : (
-            <VoucherOverlay data={v} calibration={calibration} guides />
+            <VoucherOverlay
+              data={v}
+              calibration={calibration}
+              guides
+              offsets={fieldOffsets}
+              editable={calibrateMode}
+              onMoveField={moveField}
+            />
           )}
         </div>
+
+        {printMode === "values" && calibrateMode && (
+          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-3">
+            <p className="text-xs text-muted-foreground">
+              اسحب أي حقل بالماوس لضبط موقعه على السند — يُحفظ الموقع تلقائيًا على هذا الجهاز.
+            </p>
+            <button
+              type="button"
+              onClick={resetFieldOffsets}
+              className="h-9 rounded-md border border-input px-3 text-xs font-semibold"
+            >
+              إعادة ضبط المواقع
+            </button>
+          </div>
+        )}
 
         {printMode === "values" && (
           <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-card p-3">
@@ -302,7 +367,7 @@ export function VoucherForm({
               {printMode === "full" ? (
                 <VoucherDocument data={v} mode="full" />
               ) : (
-                <VoucherOverlay data={v} calibration={calibration} />
+                <VoucherOverlay data={v} calibration={calibration} offsets={fieldOffsets} />
               )}
             </div>,
             document.body,
