@@ -51,6 +51,31 @@ export interface Calibration {
 export const DEFAULT_CALIBRATION: Calibration = { offsetX: 0, offsetY: 0 };
 export const CALIBRATION_KEY = "voucher-print-calibration";
 
+/** إزاحة كل حقل على حدة (بالمليمتر) — ناتجة عن السحب بالماوس */
+export type FieldOffsets = Record<string, { dx: number; dy: number }>;
+export const FIELD_OFFSETS_KEY = "voucher-field-offsets";
+
+export function loadFieldOffsets(): FieldOffsets {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(FIELD_OFFSETS_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as FieldOffsets;
+    const out: FieldOffsets = {};
+    for (const [k, val] of Object.entries(parsed ?? {})) {
+      out[k] = { dx: Number(val?.dx) || 0, dy: Number(val?.dy) || 0 };
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+export function saveFieldOffsets(o: FieldOffsets) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(FIELD_OFFSETS_KEY, JSON.stringify(o));
+}
+
 export function loadCalibration(): Calibration {
   if (typeof window === "undefined") return DEFAULT_CALIBRATION;
   try {
