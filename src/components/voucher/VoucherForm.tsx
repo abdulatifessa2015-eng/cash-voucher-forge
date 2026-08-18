@@ -8,7 +8,10 @@ import {
   DEFAULT_CALIBRATION,
   loadCalibration,
   saveCalibration,
+  loadFieldOffsets,
+  saveFieldOffsets,
   type Calibration,
+  type FieldOffsets,
 } from "./voucher-layout";
 import type { VoucherData, AccountKind } from "./voucher-types";
 import "./voucher.css";
@@ -48,12 +51,15 @@ export function VoucherForm({
   const [serialTouched, setSerialTouched] = useState(false);
   const [printMode, setPrintMode] = useState<"full" | "values">("full");
   const [calibration, setCalibration] = useState<Calibration>(DEFAULT_CALIBRATION);
+  const [fieldOffsets, setFieldOffsets] = useState<FieldOffsets>({});
+  const [calibrateMode, setCalibrateMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const set = (patch: Partial<VoucherData>) => setV((p) => ({ ...p, ...patch }));
 
   useEffect(() => {
     setMounted(true);
     setCalibration(loadCalibration());
+    setFieldOffsets(loadFieldOffsets());
   }, []);
 
   const updateCalibration = (patch: Partial<Calibration>) => {
@@ -62,6 +68,25 @@ export function VoucherForm({
       saveCalibration(next);
       return next;
     });
+  };
+
+  const moveField = (key: string, dx: number, dy: number) => {
+    setFieldOffsets((prev) => {
+      const next = { ...prev, [key]: { dx, dy } };
+      saveFieldOffsets(next);
+      return next;
+    });
+  };
+
+  const resetFieldOffsets = () => {
+    setFieldOffsets({});
+    saveFieldOffsets({});
+    toast.success("تمت إعادة الحقول إلى مواقعها الأصلية");
+  };
+
+  const testPrint = () => {
+    setPrintMode("values");
+    setTimeout(() => window.print(), 150);
   };
 
   useEffect(() => {
