@@ -204,6 +204,20 @@ function UsersPage() {
                         {u.status === "active" ? "إيقاف" : "تفعيل"}
                       </button>
                     )}
+                    <button
+                      onClick={() => {
+                        const pwd = window.prompt(`كلمة المرور الجديدة للمستخدم ${u.username}`);
+                        if (!pwd) return;
+                        if (pwd.length < 8) {
+                          toast.error("كلمة المرور يجب ألا تقل عن 8 أحرف");
+                          return;
+                        }
+                        resetPassword.mutate({ userId: u.id, password: pwd });
+                      }}
+                      className="rounded-md border border-input px-2 py-1 text-xs hover:bg-accent"
+                    >
+                      تغيير كلمة المرور
+                    </button>
                   </div>
                 </td>
               </tr>
