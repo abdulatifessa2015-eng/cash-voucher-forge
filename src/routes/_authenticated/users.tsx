@@ -1,7 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, listUsers, updateUserRole, updateUserStatus } from "@/lib/system.functions";
+import {
+  createUser,
+  listUsers,
+  resetUserPassword,
+  updateUserRole,
+  updateUserStatus,
+} from "@/lib/system.functions";
 import { newUserSchema, ROLE_LABEL } from "@/lib/auth-shared";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { toast } from "sonner";
