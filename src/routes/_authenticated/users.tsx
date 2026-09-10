@@ -1,7 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, listUsers, updateUserRole, updateUserStatus } from "@/lib/system.functions";
+import {
+  createUser,
+  listUsers,
+  resetUserPassword,
+  updateUserRole,
+  updateUserStatus,
+} from "@/lib/system.functions";
 import { newUserSchema, ROLE_LABEL } from "@/lib/auth-shared";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { toast } from "sonner";
@@ -68,6 +74,15 @@ function UsersPage() {
       qc.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "تعذّر التحديث"),
+  });
+
+  const resetPassword = useMutation({
+    mutationFn: (v: { userId: string; password: string }) => resetUserPassword({ data: v }),
+    onSuccess: () => {
+      toast.success("تم تغيير كلمة المرور");
+      qc.invalidateQueries({ queryKey: ["audit-logs"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "تعذّر تغيير كلمة المرور"),
   });
 
   if (!isAdmin) return null;
@@ -189,6 +204,20 @@ function UsersPage() {
                         {u.status === "active" ? "إيقاف" : "تفعيل"}
                       </button>
                     )}
+                    <button
+                      onClick={() => {
+                        const pwd = window.prompt(`كلمة المرور الجديدة للمستخدم ${u.username}`);
+                        if (!pwd) return;
+                        if (pwd.length < 8) {
+                          toast.error("كلمة المرور يجب ألا تقل عن 8 أحرف");
+                          return;
+                        }
+                        resetPassword.mutate({ userId: u.id, password: pwd });
+                      }}
+                      className="rounded-md border border-input px-2 py-1 text-xs hover:bg-accent"
+                    >
+                      تغيير كلمة المرور
+                    </button>
                   </div>
                 </td>
               </tr>

@@ -242,3 +242,29 @@ export const updateUserStatus = createServerFn({ method: "POST" })
     });
     return { ok: true };
   });
+
+export const resetUserPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({ userId: z.string().uuid(), password: z.string().min(8).max(72) })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("غير مصرّح");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(data.userId, {
+      password: data.password,
+    });
+    if (error) throw new Error(error.message);
+    await context.supabase.from("audit_logs").insert({
+      user_id: context.userId,
+      action: "user_password_reset",
+      details: "إعادة تعيين كلمة مرور مستخدم",
+    });
+    return { ok: true };
+  });
