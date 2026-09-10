@@ -42,6 +42,7 @@ export const ACTION_LABEL: Record<string, string> = {
   user_created: "إنشاء مستخدم",
   user_role_changed: "تعديل صلاحية",
   user_status_changed: "تغيير حالة مستخدم",
+  user_password_reset: "إعادة تعيين كلمة المرور",
   system_bootstrap: "تهيئة النظام",
   voucher_created: "إنشاء سند",
   voucher_updated: "تعديل سند",
