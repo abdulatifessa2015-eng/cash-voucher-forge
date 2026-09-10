@@ -76,6 +76,15 @@ function UsersPage() {
     onError: (e) => toast.error(e instanceof Error ? e.message : "تعذّر التحديث"),
   });
 
+  const resetPassword = useMutation({
+    mutationFn: (v: { userId: string; password: string }) => resetUserPassword({ data: v }),
+    onSuccess: () => {
+      toast.success("تم تغيير كلمة المرور");
+      qc.invalidateQueries({ queryKey: ["audit-logs"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "تعذّر تغيير كلمة المرور"),
+  });
+
   if (!isAdmin) return null;
 
   return (
